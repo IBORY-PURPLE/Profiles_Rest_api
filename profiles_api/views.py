@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
 
 
 from profiles_api import serializers
@@ -125,3 +126,5 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     # ModelViewSet은 기본적으로 list, create, retrieve, update, partial_update, destroy 등의 메서드를 제공합니다.
     authentiation_classes = (TokenAuthentication,)
     permission_classes = (permission.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
