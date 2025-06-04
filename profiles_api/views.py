@@ -3,9 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 
 
 from profiles_api import serializers
+from profiles_api import models
+from profiles_api import permission
 
 # Create your views here.
 
@@ -112,3 +115,13 @@ class HelloViewSet(viewsets.ViewSet):
 
         return Response({'http_method': 'DELETE'})
     
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and updating profiles"""
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    # ModelViewSet은 Django REST Framework에서 제공하는 클래스 중 하나로,   
+    # 모델에 대한 CRUD(Create, Read, Update, Delete) 작업을 자동으로 처리해주는 뷰셋입니다.
+    # ModelViewSet은 Django의 모델과 연결되어 있으며, 모델의 데이터를 직렬화하고 역직렬화하는 기능을 제공합니다.
+    # ModelViewSet은 기본적으로 list, create, retrieve, update, partial_update, destroy 등의 메서드를 제공합니다.
+    authentiation_classes = (TokenAuthentication,)
+    permission_classes = (permission.UpdateOwnProfile,)
